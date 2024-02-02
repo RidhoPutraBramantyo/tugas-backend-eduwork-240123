@@ -1,21 +1,17 @@
 const express = require("express");
-const indexRouter = require("./routes/index");
-
 const app = express();
 
-app.use("/", indexRouter);
+const router = require("./routes");
+const log = require("./middlelwares/logger");
 
+app.use(log);
+app.use(router);
 app.use((req, res, next) => {
-  const err = new Error("Not Found");
-  err.status = 404;
-  next(err);
-});
-
-app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.json({
-    error: err.message,
+  res.send({
+    status: "failed",
+    message: `Resource ${req.originalUrl} not found`,
   });
 });
 
-module.exports = app;
+PORT = 3000;
+app.listen(3000, console.log(`Server: http://localhost:${PORT}`));
